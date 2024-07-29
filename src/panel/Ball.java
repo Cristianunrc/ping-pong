@@ -5,9 +5,25 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-public class Ball {
+public class Ball extends Rectangle {
   
-  Ball() {
+  public Ball() {
+    
+  }
+  
+  public void setXDirection(int randomXDirection) {
+    
+  }
+  
+  public void setYDirection(int randomYDirection) {
+    
+  }
+  
+  public void move() {
+    
+  }
+  
+  public void draw(Graphics graphic) {
     
   }
 
