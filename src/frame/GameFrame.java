@@ -5,9 +5,13 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-public class GameFrame {
+import panel.GamePanel;
+
+public class GameFrame extends JFrame {
   
-  GameFrame() {
+  GamePanel panel = new GamePanel();
+  
+  public GameFrame() {
     
   }
 
