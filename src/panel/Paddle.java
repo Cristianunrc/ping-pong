@@ -11,8 +11,9 @@ public class Paddle extends Rectangle {
   
   int yVelocity;
   
-  public Paddle() {
-    
+  public Paddle(int x, int y, int width, int height, int id) {
+    super(x, y, width, height);
+    this.id = id;
   }
   
   public void keyPressed(KeyEvent e) {
@@ -31,8 +32,13 @@ public class Paddle extends Rectangle {
     
   }
   
-  public void draw(Graphics graphic) {
-    
+  public void draw(Graphics g) {
+    if (id == 1) {
+      g.setColor(Color.blue);
+    } else {
+      g.setColor(Color.red);
+    }
+    g.fillRect(x, y, width, height);
   }
 
 }
