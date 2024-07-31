@@ -15,19 +15,21 @@ public class GamePanel extends JPanel implements Runnable {
   
   static final int BALL_DIAMETER = 20;
   
-  static final int PANEL_WIDTH = 25;
+  static final int PADDLE_WIDTH = 25;
   
-  static final int PANEL_HEIGHT = 1000;
+  static final int PADDLE_HEIGHT = 100;
   
   private Thread thread;
   
   Image image;
   
-  Graphics graphics;
+  private Graphics graphics;
   
   Random random;
   
-  Paddle paddle;
+  private Paddle paddleOne;
+  
+  private Paddle paddleTwo;
   
   Ball ball;
   
@@ -50,18 +52,20 @@ public class GamePanel extends JPanel implements Runnable {
   }
   
   public void newPaddles() {
-    
+    paddleOne = new Paddle(0, (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2), PADDLE_WIDTH, PADDLE_HEIGHT, 1);
+    paddleTwo = new Paddle(GAME_WIDTH - PADDLE_WIDTH, (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2), PADDLE_WIDTH, PADDLE_HEIGHT, 2);
   }
   
   public void paint(Graphics g) {
-    image = createImage(GAME_WIDTH, GAME_HEIGHT);
+    image = createImage(getWidth(), getHeight());
     graphics = image.getGraphics();
     draw(graphics);
     g.drawImage(image, 0, 0, this);
   }
   
   public void draw(Graphics g) {
-    
+    paddleOne.draw(g);
+    paddleTwo.draw(g);
   }
   
   public void move() {
@@ -73,7 +77,21 @@ public class GamePanel extends JPanel implements Runnable {
   }
   
   public void run() {
-    
+    long lastTime = System.nanoTime();
+    double amountOfTicks = 60.0;
+    double ns = 1000000000 / amountOfTicks;
+    double delta = 0;
+    while (true) {
+      long now = System.nanoTime();
+      delta += (now - lastTime) / ns;
+      lastTime = now;
+      if (delta >= 1) {
+        move();
+        checkCollision();
+        repaint();
+        delta--;
+      }
+    }
   }
   
   public class AL extends KeyAdapter {
