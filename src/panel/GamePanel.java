@@ -73,7 +73,18 @@ public class GamePanel extends JPanel implements Runnable {
   }
   
   public void checkCollision() {
-    
+    if (paddleOne.y <= 0) {
+      paddleOne.y = 0;
+    }
+    if (paddleOne.y >= (GAME_HEIGHT - PADDLE_HEIGHT)) {
+      paddleOne.y = GAME_HEIGHT - PADDLE_HEIGHT;
+    }
+    if (paddleTwo.y <= 0) {
+      paddleTwo.y = 0;
+    }
+    if (paddleTwo.y >= (GAME_HEIGHT - PADDLE_HEIGHT)) {
+      paddleTwo.y = GAME_HEIGHT - PADDLE_HEIGHT;
+    }
   }
   
   public void run() {
@@ -97,11 +108,13 @@ public class GamePanel extends JPanel implements Runnable {
   public class AL extends KeyAdapter {
     
     public void keyPressed(KeyEvent e) {
-      
+      paddleOne.keyPressed(e);
+      paddleTwo.keyPressed(e);
     }
     
     public void keyReleased(KeyEvent e) {
-      
+      paddleOne.keyReleased(e);
+      paddleTwo.keyReleased(e);
     }
   }
 }
