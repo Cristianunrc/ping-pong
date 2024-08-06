@@ -25,13 +25,13 @@ public class GamePanel extends JPanel implements Runnable {
   
   private Graphics graphics;
   
-  Random random;
+  private Random random;
   
   private Paddle paddleOne;
   
   private Paddle paddleTwo;
   
-  Ball ball;
+  private Ball ball;
   
   private Score score;
   
@@ -48,7 +48,8 @@ public class GamePanel extends JPanel implements Runnable {
   }
   
   public void newBall() {
-    
+    random = new Random();
+    ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2), (GAME_HEIGHT / 2) - (BALL_DIAMETER / 2), BALL_DIAMETER, BALL_DIAMETER);
   }
   
   public void newPaddles() {
@@ -66,24 +67,53 @@ public class GamePanel extends JPanel implements Runnable {
   public void draw(Graphics g) {
     paddleOne.draw(g);
     paddleTwo.draw(g);
+    ball.draw(g);
   }
   
   public void move() {
-    
+    paddleOne.move();
+    paddleTwo.move();
+    ball.move();
   }
   
   public void checkCollision() {
-    if (paddleOne.y <= 0) {
-      paddleOne.y = 0;
+    if (ball.y <= 0) {
+      ball.setYDirection(-ball.yVelocity);
     }
-    if (paddleOne.y >= (GAME_HEIGHT - PADDLE_HEIGHT)) {
-      paddleOne.y = GAME_HEIGHT - PADDLE_HEIGHT;
+    
+    if (ball.y >= (GAME_HEIGHT - BALL_DIAMETER)) {
+      ball.setYDirection(-ball.yVelocity);
     }
-    if (paddleTwo.y <= 0) {
-      paddleTwo.y = 0;
+    
+    checkCollisionBallOnPaddle(paddleOne);
+    checkCollisionBallOnPaddle(paddleTwo);
+    checkCollisionPaddleOnLimits(paddleOne);
+    checkCollisionPaddleOnLimits(paddleTwo);
+  }
+  
+  public void checkCollisionPaddleOnLimits(Paddle paddle) {
+    if (paddle.y <= 0) {
+      paddle.y = 0;
     }
-    if (paddleTwo.y >= (GAME_HEIGHT - PADDLE_HEIGHT)) {
-      paddleTwo.y = GAME_HEIGHT - PADDLE_HEIGHT;
+    
+    int spaceMove = GAME_HEIGHT - PADDLE_HEIGHT;
+    if (paddle.y >= spaceMove) {
+      paddle.y = spaceMove;
+    }
+  }
+  
+  public void checkCollisionBallOnPaddle(Paddle paddle) {
+    if (ball.intersects(paddle)) {
+      ball.xVelocity = Math.abs(ball.xVelocity);
+      ball.xVelocity++;
+      if (ball.yVelocity > 0) {
+        ball.yVelocity++;
+      } else {
+        ball.yVelocity--;
+      }
+      int xVel = paddle.equals(paddleTwo) ? -ball.xVelocity : ball.xVelocity;
+      ball.setXDirection(xVel);
+      ball.setYDirection(ball.yVelocity);
     }
   }
   
