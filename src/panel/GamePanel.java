@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements Runnable {
   
   private Thread thread;
   
-  Image image;
+  private Image image;
   
   private Graphics graphics;
   
@@ -49,12 +49,16 @@ public class GamePanel extends JPanel implements Runnable {
   
   public void newBall() {
     random = new Random();
-    ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2), (GAME_HEIGHT / 2) - (BALL_DIAMETER / 2), BALL_DIAMETER, BALL_DIAMETER);
+    int x = (GAME_WIDTH / 2) - (BALL_DIAMETER / 2);
+    int y = random.nextInt(GAME_HEIGHT - BALL_DIAMETER);
+    ball = new Ball(x, y, BALL_DIAMETER, BALL_DIAMETER);
   }
   
   public void newPaddles() {
-    paddleOne = new Paddle(0, (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2), PADDLE_WIDTH, PADDLE_HEIGHT, 1);
-    paddleTwo = new Paddle(GAME_WIDTH - PADDLE_WIDTH, (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2), PADDLE_WIDTH, PADDLE_HEIGHT, 2);
+    int x = GAME_WIDTH - PADDLE_WIDTH;
+    int y = (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2);
+    paddleOne = new Paddle(0, y, PADDLE_WIDTH, PADDLE_HEIGHT, 1);
+    paddleTwo = new Paddle(x, y, PADDLE_WIDTH, PADDLE_HEIGHT, 2);
   }
   
   public void paint(Graphics g) {
@@ -68,6 +72,7 @@ public class GamePanel extends JPanel implements Runnable {
     paddleOne.draw(g);
     paddleTwo.draw(g);
     ball.draw(g);
+    score.draw(g);
   }
   
   public void move() {
@@ -77,11 +82,7 @@ public class GamePanel extends JPanel implements Runnable {
   }
   
   public void checkCollision() {
-    if (ball.y <= 0) {
-      ball.setYDirection(-ball.yVelocity);
-    }
-    
-    if (ball.y >= (GAME_HEIGHT - BALL_DIAMETER)) {
+    if (ball.y <= 0 || ball.y >= GAME_HEIGHT - BALL_DIAMETER) {
       ball.setYDirection(-ball.yVelocity);
     }
     
@@ -89,6 +90,7 @@ public class GamePanel extends JPanel implements Runnable {
     checkCollisionBallOnPaddle(paddleTwo);
     checkCollisionPaddleOnLimits(paddleOne);
     checkCollisionPaddleOnLimits(paddleTwo);
+    checkNoCollision();
   }
   
   public void checkCollisionPaddleOnLimits(Paddle paddle) {
@@ -114,6 +116,20 @@ public class GamePanel extends JPanel implements Runnable {
       int xVel = paddle.equals(paddleTwo) ? -ball.xVelocity : ball.xVelocity;
       ball.setXDirection(xVel);
       ball.setYDirection(ball.yVelocity);
+    }
+  }
+  
+  public void checkNoCollision() {
+    if (ball.x <= 0) {
+      score.playerTwo++;
+      newPaddles();
+      newBall();
+    }
+    
+    if (ball.x >= GAME_WIDTH - BALL_DIAMETER) {
+      score.playerOne++;
+      newPaddles();
+      newBall();
     }
   }
   
