@@ -5,10 +5,18 @@ import javax.swing.*;
 
 import panel.GamePanel;
 
+/**
+ * Construct the window of an application with
+ * graphics components.
+ */
 public class GameFrame extends JFrame {
   
   private GamePanel panel;
   
+  /**
+   * GameFrame constructor which create and construct
+   * the window panel of the game.
+   */
   public GameFrame() {
     panel = new GamePanel();
     this.add(panel);

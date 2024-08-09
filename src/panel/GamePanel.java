@@ -5,6 +5,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ * Create's an game panel window and all components in it`s, like
+ * paddles, ball and score.
+ */
 public class GamePanel extends JPanel implements Runnable {
   
   static final int GAME_WIDTH = 1000;
@@ -19,14 +23,6 @@ public class GamePanel extends JPanel implements Runnable {
   
   static final int PADDLE_HEIGHT = 100;
   
-  private Thread thread;
-  
-  private Image image;
-  
-  private Graphics graphics;
-  
-  private Random random;
-  
   private Paddle paddleOne;
   
   private Paddle paddleTwo;
@@ -35,6 +31,17 @@ public class GamePanel extends JPanel implements Runnable {
   
   private Score score;
   
+  private Graphics graphics;
+  
+  private Thread thread;
+  
+  private Image image;
+  
+  private Random random;
+  
+  /**
+   * Constructor of class which initialize the game panel.
+   */
   public GamePanel() {
     newPaddles();
     newBall();
@@ -47,6 +54,9 @@ public class GamePanel extends JPanel implements Runnable {
     thread.start();
   }
   
+  /**
+   * Create a ball on the middle of panel in a randomly position.
+   */
   public void newBall() {
     random = new Random();
     int x = (GAME_WIDTH / 2) - (BALL_DIAMETER / 2);
@@ -54,6 +64,10 @@ public class GamePanel extends JPanel implements Runnable {
     ball = new Ball(x, y, BALL_DIAMETER, BALL_DIAMETER);
   }
   
+  /**
+   * Create two paddles on the side's left and right of the game panel
+   * in the middle position.
+   */
   public void newPaddles() {
     int x = GAME_WIDTH - PADDLE_WIDTH;
     int y = (GAME_HEIGHT / 2) - (PADDLE_HEIGHT / 2);
@@ -61,6 +75,9 @@ public class GamePanel extends JPanel implements Runnable {
     paddleTwo = new Paddle(x, y, PADDLE_WIDTH, PADDLE_HEIGHT, 2);
   }
   
+  /**
+   * Paint the panel game.
+   */
   public void paint(Graphics g) {
     image = createImage(getWidth(), getHeight());
     graphics = image.getGraphics();
@@ -68,6 +85,11 @@ public class GamePanel extends JPanel implements Runnable {
     g.drawImage(image, 0, 0, this);
   }
   
+  /**
+   * Draw all components on the game panel which are paddles,
+   * ball and score.
+   * @param g an Graphics instance.
+   */
   public void draw(Graphics g) {
     paddleOne.draw(g);
     paddleTwo.draw(g);
@@ -75,12 +97,19 @@ public class GamePanel extends JPanel implements Runnable {
     score.draw(g);
   }
   
+  /**
+   * Allow the moves of the paddles and ball.
+   */
   public void move() {
     paddleOne.move();
     paddleTwo.move();
     ball.move();
   }
   
+  /**
+   * Checks the ball make collision whit the limits of the game panel,
+   * the paddles or well no make collision.
+   */
   public void checkCollision() {
     if (ball.y <= 0 || ball.y >= GAME_HEIGHT - BALL_DIAMETER) {
       ball.setYDirection(-ball.yVelocity);
@@ -93,6 +122,10 @@ public class GamePanel extends JPanel implements Runnable {
     checkNoCollision();
   }
   
+  /**
+   * Checks the ball make collision with limits of the panel game.
+   * @param paddle an Paddle instance representing a paddle.
+   */
   public void checkCollisionPaddleOnLimits(Paddle paddle) {
     if (paddle.y <= 0) {
       paddle.y = 0;
@@ -104,6 +137,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
   }
   
+  /**
+   * Checks if the ball make a collision with the paddles.
+   * @param paddle an Paddle instance representing a paddle.
+   */
   public void checkCollisionBallOnPaddle(Paddle paddle) {
     if (ball.intersects(paddle)) {
       ball.xVelocity = Math.abs(ball.xVelocity);
@@ -119,6 +156,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
   }
   
+  /**
+   * Checks if an player make an point.
+   */
   public void checkNoCollision() {
     if (ball.x <= 0) {
       score.playerTwo++;
@@ -133,6 +173,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
   }
   
+  /**
+   * Run method of Runnable class.
+   */
   public void run() {
     long lastTime = System.nanoTime();
     double amountOfTicks = 60.0;

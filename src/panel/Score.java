@@ -2,6 +2,9 @@ package panel;
 
 import java.awt.*;
 
+/**
+ * Representing the score points in the panel game.
+ */
 public class Score extends Rectangle {
   
   static int GAME_WIDTH;
@@ -12,11 +15,21 @@ public class Score extends Rectangle {
   
   int playerTwo;
   
+  /**
+   * Class constructor which initialize the width and
+   * height of the game.
+   * @param width an int representing the width of the game.
+   * @param height an int representing the height of the game.
+   */
   public Score(int width, int height) {
     Score.GAME_WIDTH = width;
     Score.GAME_HEIGHT = height;
   }
   
+  /**
+   * Draw the score numbers on the panel game.
+   * @param g an Graphics instance. 
+   */
   public void draw(Graphics g) {
     g.setColor(Color.white);
     g.setFont(new Font("Consolas", Font.PLAIN, 60));
